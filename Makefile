@@ -13,3 +13,4 @@ flag = -c -Wall -Werror -std=c99
 .PHONY: clean
 clean:
 	rm -rf ./build/*.o
+

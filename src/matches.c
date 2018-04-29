@@ -32,3 +32,45 @@ int nicknames(char *player1, char *player2)
 	return 0;
 }
 
+int matches_game(char *player1, char *player2){
+	int player, matches = 100;
+	char value[100];
+	player = 1;
+	while (1){
+		if (player == 1){
+			printf("%s ,your turn\n", player1);
+			printf("Enter how much matches you want to take\n");
+			scanf("%s",value);
+			while(correct_match(atoi(value)) == 1){
+				scanf("%s", value);
+			}
+			matches = matches - atoi(value);
+			if (matches < 1){
+				return 1;
+			}
+			system ("clear");
+			printf("Matches left %d\n", matches);
+		}
+		if (player == 2){
+			printf("%s ,your turn\n", player2);
+			printf("Enter how much matches you want to take\n");
+			scanf("%s",value);
+			while(correct_match(atoi(value)) == 1){
+				scanf("%s", value);
+			}
+			matches = matches - atoi(value);
+			if (matches < 1){
+				return 2;
+			}
+			system ("clear");
+			printf("Matches left %d\n", matches);
+		}
+		if (player == 1){
+			player = 2;
+		} else { 
+			player = 1;
+		}
+	}
+	return 0;
+}
+
