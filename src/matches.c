@@ -12,4 +12,20 @@ int correct_match (int value){
 	return 0;
 }	
 
+int nicknames(char *player1, char *player2)
+{
+	printf("Player 1, enter your nickname here\n");
+	fgets(player1, 100, stdin);
+	int count;
+	count = strlen(player1);
+	player1[count - 1] = '\0';
+	printf("Player 2, enter your nickname here\n");
+	fgets(player2, 100, stdin);
+	count = strlen(player2);
+	player2[count - 1] = '\0';
+	system ("clear");
+	return 0;
+}
+
+
 
