@@ -5,10 +5,19 @@
 
 int main()
 {
-	char player1[100], player2[100];
-	nicknames(player1, player2);
-	printf("Nickname of Player 1 :%s\n", player1);
-	printf("Nickname of Player 2 :%s\n", player2);
+	char pl1[100], pl2[100];
+	nicknames(pl1, pl2);
+	char congr [] = {", You Won!!!! "};
+	int win;
+	win = matches_game(pl1, pl2);
+	if (win == 1){
+		strcat(pl1, congr);
+		printf("%s", pl1);
+	} else {
+		strcat(pl2, congr);
+		printf("%s", pl2);
+	}
+	
+	
 	return 0;
 }
-

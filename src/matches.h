@@ -3,6 +3,8 @@
 
 int correct_match(int value);
 int nicknames(char *player1, char *player2);
+int matches_game(char *player1, char *player2);
 
 #endif
+
 
