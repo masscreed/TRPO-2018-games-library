@@ -3,11 +3,17 @@
 
 int main()
 {
-	int priority;
 
-	priority = first_player();
+	while (1) {
+		char * num = enter_number("SlowKing");
 
-	printf("Number of first player is %d\n", priority);
+		if (num != NULL) {
+			printf("%s\n", num);
+			break;
+		} else {
+			continue;
+		}
+	}
 
 	return 0;
 }
