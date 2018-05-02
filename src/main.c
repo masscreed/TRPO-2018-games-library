@@ -8,8 +8,10 @@ int main()
 		char * num = enter_number("SlowKing");
 
 		if (num != NULL) {
-			printf("%s\n", num);
-			break;
+			if (!check_number(num)) {
+				printf("%s\n", num);
+				break;
+			}
 		} else {
 			continue;
 		}

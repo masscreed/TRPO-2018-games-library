@@ -3,6 +3,7 @@
 #include <time.h>
 #include <theme.h>
 #include <ctype.h>
+#include <string.h>
 #include "bulls.h"
 
 
@@ -59,5 +60,18 @@ void flush_input() {
 	c = getc(stdin);
 	while (c != '\n') {
 		c = getc(stdin);
+	}
+}
+
+int check_number(char *number) {
+	if (number[4] == '\n') {
+		number[4] = '\0';
+		return 0;
+	} else {
+		if (!strchr(number, '\n')) {
+			flush_input();
+		}
+		printf(DEFAULT RED BLACKF "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
+		return -1;
 	}
 }

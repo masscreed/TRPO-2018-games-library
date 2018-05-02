@@ -3,6 +3,7 @@
 
 int first_player ();
 char * enter_number(char *player);
+int check_number(char *number);
 
 void flush_input();
 
