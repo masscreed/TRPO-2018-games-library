@@ -27,19 +27,19 @@ char *enter_number(char *player) {
 	char ch;
 	char *number = calloc(5, sizeof(char));
 	if (number == NULL) {
-		printf(DEFAULT RED BLACKF "ERROR\n" DEFAULT);
+		printf(DEFAULT RED BLACKF BOLD "ERROR\n" DEFAULT);
 		return NULL;
 	}
 	int read = 0;
 
-	printf(AQUA BLACKF "%s enter number: " DEFAULT, player);
-	printf(GREEN BLACKF);
+	printf(AQUA BLACKF BOLD "%s enter number: " DEFAULT, player);
+	printf(GREEN BLACKF BOLD);
 
 	do {
 		ch = getchar ();
 
 		if (!isdigit(ch) && ch != '\n') {
-			printf(DEFAULT RED BLACKF "ERROR IN INPUT\n" DEFAULT);
+			printf(DEFAULT RED BLACKF BOLD "ERROR IN INPUT\n" DEFAULT);
 			flush_input();
 			return NULL;
 		}
@@ -71,7 +71,7 @@ int check_number(char *number) {
 		if (!strchr(number, '\n')) {
 			flush_input();
 		}
-		printf(DEFAULT RED BLACKF "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
+		printf(DEFAULT RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
 		return -1;
 	}
 }
@@ -104,3 +104,13 @@ int guessing(char *player, char *number) {
 
 	return bucow;
 }
+
+void print_bulls_cows(int bullcow) {
+	int bulls = bullcow / 10;
+	int cows = bullcow % 10;
+
+	printf(BLACKF BOLD RED "Bulls: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", bulls);
+	printf(BLACKF BOLD GREEN "Cows: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", cows);
+}
+
+
