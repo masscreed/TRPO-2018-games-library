@@ -27,7 +27,7 @@ char *enter_number(char *player) {
 	char ch;
 	char *number = calloc(5, sizeof(char));
 	if (number == NULL) {
-		printf(DEFAULT RED BLACKF BOLD "ERROR\n" DEFAULT);
+		printf(RED BLACKF BOLD "ERROR\n" DEFAULT);
 		return NULL;
 	}
 	int read = 0;
@@ -66,12 +66,20 @@ void flush_input() {
 int check_number(char *number) {
 	if (number[4] == '\n') {
 		number[4] = '\0';
+		for (int i = 0; i < 4 ; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (number[i] == number[j] && i != j) {
+					printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats) \n" DEFAULT);
+					return -1;
+				}
+			}
+		}
 		return 0;
 	} else {
 		if (!strchr(number, '\n')) {
 			flush_input();
 		}
-		printf(DEFAULT RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
 		return -1;
 	}
 }
