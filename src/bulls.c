@@ -32,7 +32,7 @@ char *enter_number(char *player) {
 	}
 	int read = 0;
 
-	printf(AQUA BLACKF "%s enter your number: " DEFAULT, player);
+	printf(AQUA BLACKF "%s enter number: " DEFAULT, player);
 	printf(GREEN BLACKF);
 
 	do {
@@ -74,4 +74,33 @@ int check_number(char *number) {
 		printf(DEFAULT RED BLACKF "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
 		return -1;
 	}
+}
+
+int guessing(char *player, char *number) {
+	char * input;
+	int bucow;
+
+	while (1) {
+		input = enter_number(player);
+
+		if (input != NULL) {
+			if (!check_number(input)) {
+				break;
+			}
+		} else {
+			continue;
+		}
+	}
+
+	for (int i = 0; i < 4 ; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (input[i] == number[j] && i == j) {
+				bucow += 10;
+			} else if (input[i] == number[j] && i != j) {
+				bucow ++;
+			}
+		}
+	}
+
+	return bucow;
 }
