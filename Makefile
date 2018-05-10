@@ -1,7 +1,7 @@
 C = gcc
 flag = -c -Wall -Werror -std=c99
 
-all: ./bin/games ./bin/test
+all: ./bin/games
 
 ./bin/games: ./build/src/main.o ./build/src/matches.o ./build/src/bulls.o
 	$(C) ./build/src/main.o  ./build/src/matches.o ./build/src/bulls.o -o ./bin/games
@@ -15,8 +15,8 @@ all: ./bin/games ./bin/test
 ./build/src/bulls.o: ./src/bulls.c ./src/bulls.h
 	$(C) $(flag) -I thirdparty ./src/bulls.c -o ./build/src/bulls.o
 
-./bin/test: build/test/games_test.o build/test/main.o build/src/matches.o build/src/bulls.o
-	$(C) ./build/test/main.o ./build/test/games_test.o ./build/src/matches.o ./build/src/bulls.o -o ./bin/test
+./bin/gamestest: build/test/games_test.o build/test/main.o build/src/matches.o build/src/bulls.o
+	$(C) ./build/test/main.o ./build/test/games_test.o ./build/src/matches.o ./build/src/bulls.o -o ./bin/gamestest
 
 ./build/test/main.o: ./test/main.c
 	$(C) -Ithirdparty -Isrc -c ./test/main.c -o ./build/test/main.o
@@ -26,9 +26,10 @@ all: ./bin/games ./bin/test
 
 .PHONY: clean
 clean:
-	rm -rf ./build/*.o
+	rm -rf ./build/src/*.o
+	rm -rf ./build/test/*.o
 
 .PHONY: test
-test:
-		./bin/test
+test: ./bin/gamestest
+		./bin/gamestest
 
