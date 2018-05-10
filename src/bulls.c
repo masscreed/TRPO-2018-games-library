@@ -27,7 +27,6 @@ char *enter_number(char *player) {
 	char ch;
 	char *number = calloc(5, sizeof(char));
 	if (number == NULL) {
-		printf(RED BLACKF BOLD "ERROR\n" DEFAULT);
 		return NULL;
 	}
 	int read = 0;
@@ -38,13 +37,7 @@ char *enter_number(char *player) {
 	do {
 		ch = getchar ();
 
-		if (!isdigit(ch) && ch != '\n') {
-			printf(DEFAULT RED BLACKF BOLD "ERROR IN INPUT\n" DEFAULT);
-			flush_input();
-			return NULL;
-		}
-
-			number [read] = ch;
+		number [read] = ch;
 
 		read++;
 	} while (read != 5 && ch != '\n');
@@ -64,13 +57,22 @@ void flush_input() {
 }
 
 int check_number(char *number) {
+
+	for (int i = 0; i < 5; i++) {
+		if (!isdigit(number[i]) && number[i] != '\n') {
+			if (!strchr(number, '\n')) {
+				flush_input();
+			}
+			return -1;
+		}
+	}
+
 	if (number[4] == '\n') {
 		number[4] = '\0';
 		for (int i = 0; i < 4 ; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (number[i] == number[j] && i != j) {
-					printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats) \n" DEFAULT);
-					return -1;
+					return -2;
 				}
 			}
 		}
@@ -79,21 +81,24 @@ int check_number(char *number) {
 		if (!strchr(number, '\n')) {
 			flush_input();
 		}
-		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
-		return -1;
+		return -3;
 	}
 }
 
 int guessing(char *player, char *number) {
 	char * input;
-	int bucow;
+	int bucow = 0;
 
 	while (1) {
 		input = enter_number(player);
 
 		if (input != NULL) {
-			if (!check_number(input)) {
+			int error = check_number(input);
+			if (!error) {
 				break;
+			} else {
+				print_error(error);
+				continue;
 			}
 		} else {
 			continue;
@@ -119,6 +124,16 @@ void print_bulls_cows(int bullcow) {
 
 	printf(BLACKF BOLD RED "Bulls: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", bulls);
 	printf(BLACKF BOLD GREEN "Cows: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", cows);
+}
+
+void print_error(int error) {
+	if (error == -1) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (letters in input) \n" DEFAULT);
+	} else if (error == -2) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats) \n" DEFAULT);
+	}  else if (error == -3) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
+	}
 }
 
 

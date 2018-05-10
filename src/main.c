@@ -5,19 +5,26 @@
 
 int main()
 {
-	char pl1[20], pl2[20];
-	nicknames(pl1, pl2);
-	char congr [] = {", You Won!!!! "};
-	int win;
-	win = matches_game(pl1, pl2);
-	if (win == 1){
-		strcat(pl1, congr);
-		printf("%s", pl1);
-	} else {
-		strcat(pl2, congr);
-		printf("%s", pl2);
+	char * num;
+	while (1) {
+		num = enter_number("SlowKing");
+
+		if (num != NULL) {
+			int error = check_number(num);
+			if (!error) {
+				break;
+			} else {
+				print_error(error);
+				continue;
+			}
+		} else {
+			continue;
+		}
 	}
 
+	int bc = guessing("Lion", num);
 
-   return 0;
+	print_bulls_cows(bc);
+
+	return 0;
 }
