@@ -2,29 +2,20 @@
 #include "bulls.h"
 #include "matches.h"
 #include <string.h>
+#include <stdlib.h>
 
 int main()
 {
-	char * num;
-	while (1) {
-		num = enter_number("SlowKing");
-
-		if (num != NULL) {
-			int error = check_number(num);
-			if (!error) {
-				break;
-			} else {
-				print_error(error);
-				continue;
-			}
-		} else {
-			continue;
-		}
+	char *pl1;
+	char *pl2;
+	pl1 = calloc(sizeof(char), 24);
+	pl2 = calloc(sizeof(char), 24);
+	int win;
+	win = matches_game(pl1, pl2);
+	if (win == 1){
+		printf("YOU WON,%s\n", pl1);
+	} else {
+		printf("YOU WON,%s\n", pl2);
 	}
-
-	int bc = guessing("Lion", num);
-
-	print_bulls_cows(bc);
-
 	return 0;
 }

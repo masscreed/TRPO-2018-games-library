@@ -5,27 +5,78 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int correct_match (int value)
+char *correct_match(char *value)
 {
-	if (value > 10 || value < 1){
-		return 1;
+	int i,flag = 0,j;
+	for(i = 0;i < 3;i++) {
+
+		if (value[i] == '\n'){
+			flag = 1;
+			break;
+		}
 	}
 
-	return 0;
+	if (flag == 1) {
+		j = i;
+		for(i = 0;i < j;i++){
+
+			if (!isdigit(value[i])) {
+				return NULL;
+			}
+		}
+
+	} else {
+		flush_input_for_match();
+		return NULL;
+	}
+	return value;
 }
 
 int nicknames(char *player1, char *player2)
 {
 	printf(AQUA  BLACKF "Player 1, enter your nickname here\n" DEFAULT);
+	printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
 	printf(GREEN BLACKF);
-	fgets(player1, 10, stdin);
+	char ch;
+	int read = 0,i;
+	do {
+		ch = getchar ();
+		if (read >= 25) {
+			flush_input_for_match();
+			for(i = 0; i < 25; i++) {
+				player1[i] = '\0';
+				player2[i] = '\0';
+			}
+			return -1;
+		}
+		player1[read] = ch;
+
+		read++;
+	} while (ch != '\n');
+
 	printf(DEFAULT);
 	int count;
 	count = strlen(player1);
 	player1[count - 1] = '\0';
 	printf(AQUA BLACKF "Player 2, enter your nickname here\n" DEFAULT);
+	printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
 	printf(GREEN BLACKF);
-	fgets(player2, 10, stdin);
+	read = 0;
+	do {
+		ch = getchar ();
+		if (read >= 25) {
+			flush_input_for_match();
+			for(i = 0; i < 25; i++) {
+				player1[i] = '\0';
+				player2[i] = '\0';
+			}
+			return -1;
+		}
+		player2 [read] = ch;
+
+		read++;
+	} while (ch != '\n');
+
 	printf(DEFAULT);
 	count = strlen(player2);
 	player2[count - 1] = '\0';
@@ -35,8 +86,21 @@ int nicknames(char *player1, char *player2)
 
 int matches_game(char *player1, char *player2)
 {
+	int flag, num;
+	while (1){
+		flag = nicknames(player1, player2);
+		if (flag == -1){
+			system ("clear");
+			printf("Too much letters in a string \n");
+			continue;
+		} else {
+			break;
+		}
+	}
+	system ("clear");
 	int player, matches = 100;
-	char *value = calloc(3, sizeof(char));
+	char *value;
+	value = calloc(sizeof(char), 3);
 	player = 1;
 	while (1){
 
@@ -44,19 +108,25 @@ int matches_game(char *player1, char *player2)
 			printf("%s ,your turn\n", player1);
 			printf("Enter how much matches you want to take\n");
 			while (1) {
-				value = enter_matches(player1);
-
-				if (value != NULL) {
-					if (correct_match(atoi(value)) == 0) {
-						break;
-					} else {
-						printf("Enter right value!\n");
-						continue;
-					}
+				value = enter_matches();
+				value = correct_match(value);
+				if (value == NULL) {
+					printf("Error Input!\n");
+					continue;
 				}
+				num = atoi(value);
+
+				if (num > 0 && num < 11) {
+					break;
+				} else {
+					system("clear");
+					printf("Value is out of range, %s. Enter another\n", player1);
+					printf("Matches left %d\n", matches);
+					continue;
+				}		
 			}
 
-			matches = matches - atoi(value);
+			matches = matches - num;
 			if (matches < 1){
 				return 1;
 			}
@@ -67,18 +137,24 @@ int matches_game(char *player1, char *player2)
 			printf("%s ,your turn\n", player2);
 			printf("Enter how much matches you want to take\n");
 			while (1) {
-				value = enter_matches(player2);
+				value = enter_matches();
+				value = correct_match(value);
+				if (value == NULL) {
+					printf("Error Input!\n");
+					continue;
+				}
+				num = atoi(value);
 
-				if (value != NULL) {
-					if (correct_match(atoi(value)) == 0) {
-						break;
-					} else {
-						printf("Enter right value!\n");
-						continue;
-					}
-				} 
+				if (num > 0 && num < 11) {
+					break;
+				} else {
+					system("clear");
+					printf("Value is out of range, %s. Enter another\n", player2);
+					printf("Matches left %d\n", matches);
+					continue;
+				}		
 			}
-			matches = matches - atoi(value);
+			matches = matches - num;
 			if (matches < 1){
 				return 2;
 			}
@@ -112,18 +188,13 @@ char *enter_matches(char *player)
 
 	do {
 		ch = getchar ();
+
 		if (ch == 'q'){
 			printf("You entered 'q'. Exit...\n");
 			exit(0);
 		}
-		if (!isdigit(ch) && ch != '\n') {
 
-			flush_input_for_match();
-			return NULL;
-		}
-
-			number [read] = ch;
-
+		number [read] = ch;
 		read++;
 	} while (read != 3 && ch != '\n');
 
