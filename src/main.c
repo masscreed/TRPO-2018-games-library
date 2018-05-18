@@ -8,7 +8,7 @@ int main()
 {
 	char *pl1;
 	char *pl2;
-	pl1 = calloc(sizeof(char), 24);
+	pl1 = calloc(sizeof(char), 25);
 	pl2 = calloc(sizeof(char), 24);
 	int win;
 	win = matches_game(pl1, pl2);

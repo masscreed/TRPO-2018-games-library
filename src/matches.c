@@ -32,64 +32,58 @@ char *correct_match(char *value)
 	return value;
 }
 
-int nicknames(char *player1, char *player2)
+char *enter_nickname(char *player)
 {
-	printf(AQUA  BLACKF "Player 1, enter your nickname here\n" DEFAULT);
-	printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
-	printf(GREEN BLACKF);
 	char ch;
 	int read = 0,i;
+	for (i = 0; i < 25; i++) {
+		player[i] = '\0';
+	}
+
 	do {
+
 		ch = getchar ();
-		if (read >= 25) {
-			flush_input_for_match();
-			for(i = 0; i < 25; i++) {
-				player1[i] = '\0';
-				player2[i] = '\0';
-			}
-			return -1;
-		}
-		player1[read] = ch;
-
+		player[read] = ch;
 		read++;
-	} while (ch != '\n');
 
-	printf(DEFAULT);
-	int count;
-	count = strlen(player1);
-	player1[count - 1] = '\0';
-	printf(AQUA BLACKF "Player 2, enter your nickname here\n" DEFAULT);
-	printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
-	printf(GREEN BLACKF);
-	read = 0;
-	do {
-		ch = getchar ();
-		if (read >= 25) {
-			flush_input_for_match();
-			for(i = 0; i < 25; i++) {
-				player1[i] = '\0';
-				player2[i] = '\0';
-			}
-			return -1;
-		}
-		player2 [read] = ch;
+	} while (ch != '\n' && read != 25);
 
-		read++;
-	} while (ch != '\n');
-
-	printf(DEFAULT);
-	count = strlen(player2);
-	player2[count - 1] = '\0';
-	system ("clear");
-	return 0;
+	return player;
 }
 
-int matches_game(char *player1, char *player2)
+int check_nickname(char *player)
 {
-	int flag, num;
+	int i,flag = 0;
+	for(i = 0;i < 25;i++) {
+
+		if (player[i] == '\n'){
+			flag = 1;
+			break;
+		}
+	}
+	
+	if (flag == 0) {
+
+		flush_input_for_match();
+		return -2;
+
+	} else {
+		return 0;
+	}
+	
+}
+
+int ask_nicknames(char *player1, char *player2)
+{
+	int flag = 0;
+	
 	while (1){
-		flag = nicknames(player1, player2);
-		if (flag == -1){
+		printf(AQUA  BLACKF "Player 1, enter your nickname here\n" DEFAULT);
+		printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
+		printf(GREEN BLACKF);
+		player1 = enter_nickname(player1);
+		flag = check_nickname(player1);
+		if (flag == -2){
 			system ("clear");
 			printf("Too much letters in a string \n");
 			continue;
@@ -97,72 +91,102 @@ int matches_game(char *player1, char *player2)
 			break;
 		}
 	}
+
+	while (1){
+		printf(AQUA  BLACKF "Player 2, enter your nickname here\n" DEFAULT);
+		printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
+		printf(GREEN BLACKF);
+		player2 = enter_nickname(player2);
+		flag = check_nickname(player2);
+		if (flag == -2){
+			system ("clear");
+			printf("Too much letters in a string \n");
+			continue;
+		} else {
+			break;
+		}
+	}
+
+	int count;
+	count = strlen(player1);
+	player1[count - 1] = '\0';
+	count = strlen(player2);
+	player2[count - 1] = '\0';
 	system ("clear");
-	int player, matches = 100;
+
+	return 0;
+}
+
+int matches_turn(char *player, int *matches)
+{
 	char *value;
 	value = calloc(sizeof(char), 3);
+	int num;
+	printf("%s ,your turn\n", player);
+	printf("Enter how much matches you want to take\n");
+	while (1) {
+		value = enter_matches();
+		value = correct_match(value);
+
+		if (value == NULL) {
+				printf("Error Input! Too much characters or incorrect symbols\n");
+				continue;
+		}
+		num = atoi(value);
+
+		if (num > 0 && num < 11) {
+			break;
+		} else {
+			system("clear");
+			printf("Value is out of range, %s. Enter another\n", player);
+			printf("Matches left %d\n", *matches);
+			continue;
+		}		
+	}
+
+	*matches = *matches - num;
+
+	if (*matches < 1){
+		return 1;
+	}
+
+	system ("clear");
+	printf("Matches left %d\n", *matches);
+
+	return 0;
+}
+
+int matches_game(char *player1, char *player2)
+{
+	int win;
+	ask_nicknames(player1,player2);
+	system ("clear");
+	int player, matches = 100;
 	player = 1;
 	while (1){
-
 		if (player == 1){
-			printf("%s ,your turn\n", player1);
-			printf("Enter how much matches you want to take\n");
-			while (1) {
-				value = enter_matches();
-				value = correct_match(value);
-				if (value == NULL) {
-					printf("Error Input!\n");
-					continue;
-				}
-				num = atoi(value);
 
-				if (num > 0 && num < 11) {
-					break;
-				} else {
-					system("clear");
-					printf("Value is out of range, %s. Enter another\n", player1);
-					printf("Matches left %d\n", matches);
-					continue;
-				}		
+			win = matches_turn(player1, &matches);
+			if (win == 1){
+				system("clear");
+				printf("You won,%s. Easy win - Eazy life!\n", player1);
+				exit(0);
 			}
-
-			matches = matches - num;
-			if (matches < 1){
-				return 1;
-			}
-			system ("clear");
-			printf("Matches left %d\n", matches);
 		}
+	
 		if (player == 2){
-			printf("%s ,your turn\n", player2);
-			printf("Enter how much matches you want to take\n");
-			while (1) {
-				value = enter_matches();
-				value = correct_match(value);
-				if (value == NULL) {
-					printf("Error Input!\n");
-					continue;
-				}
-				num = atoi(value);
 
-				if (num > 0 && num < 11) {
-					break;
-				} else {
-					system("clear");
-					printf("Value is out of range, %s. Enter another\n", player2);
-					printf("Matches left %d\n", matches);
-					continue;
-				}		
+			win = matches_turn(player2, &matches);
+			if (win == 1){
+				system("clear");
+				printf("You won,%s. Easy win - Eazy life!\n", player2);
+				exit(0);
 			}
-			matches = matches - num;
-			if (matches < 1){
-				return 2;
-			}
-			system ("clear");
-			printf("Matches left %d\n", matches);
 		}
+
 		if (player == 1){
 			player = 2;
+
 		} else {
 			player = 1;
 		}
