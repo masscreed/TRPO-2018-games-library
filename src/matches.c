@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-char *correct_match(char *value)
+int check_match(char *value)
 {
 	int i,flag = 0,j;
 	for(i = 0;i < 3;i++) {
@@ -21,15 +21,19 @@ char *correct_match(char *value)
 		for(i = 0;i < j;i++){
 
 			if (!isdigit(value[i])) {
-				return NULL;
+				return -2;
 			}
+		}
+		
+		if (atoi(value) > 10 || atoi(value) < 1) {
+			return -3;
 		}
 
 	} else {
 		flush_input_for_match();
-		return NULL;
+		return -1;
 	}
-	return value;
+	return 0;
 }
 
 char *enter_nickname(char *player)
@@ -121,27 +125,30 @@ int matches_turn(char *player, int *matches)
 {
 	char *value;
 	value = calloc(sizeof(char), 3);
-	int num;
+	int num, flag;
 	printf("%s ,your turn\n", player);
 	printf("Enter how much matches you want to take\n");
 	while (1) {
 		value = enter_matches();
-		value = correct_match(value);
+		flag = check_match(value);
 
-		if (value == NULL) {
-				printf("Error Input! Too much characters or incorrect symbols\n");
+		if (flag == -2) {
+				printf("Error Input! Incorrect symbols\n");
+				continue;
+		}
+
+		if (flag == -3) {
+				printf("Error Input! Value is out of range\n");
+				continue;
+		}
+		
+		if (flag == -1) {
+				printf("Error Input! Too much symbols\n");
 				continue;
 		}
 		num = atoi(value);
 
-		if (num > 0 && num < 11) {
-			break;
-		} else {
-			system("clear");
-			printf("Value is out of range, %s. Enter another\n", player);
-			printf("Matches left %d\n", *matches);
-			continue;
-		}		
+		break;	
 	}
 
 	*matches = *matches - num;

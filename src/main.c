@@ -9,13 +9,7 @@ int main()
 	char *pl1;
 	char *pl2;
 	pl1 = calloc(sizeof(char), 25);
-	pl2 = calloc(sizeof(char), 24);
-	int win;
-	win = matches_game(pl1, pl2);
-	if (win == 1){
-		printf("YOU WON,%s\n", pl1);
-	} else {
-		printf("YOU WON,%s\n", pl2);
-	}
+	pl2 = calloc(sizeof(char), 25);
+	matches_game(pl1, pl2);
 	return 0;
 }
