@@ -6,10 +6,6 @@
 
 int main()
 {
-	char *pl1;
-	char *pl2;
-	pl1 = calloc(sizeof(char), 25);
-	pl2 = calloc(sizeof(char), 25);
-	matches_game(pl1, pl2);
+	matches_game();
 	return 0;
 }

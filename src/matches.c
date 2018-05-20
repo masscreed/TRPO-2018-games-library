@@ -163,12 +163,15 @@ int matches_turn(char *player, int *matches)
 	return 0;
 }
 
-int matches_game(char *player1, char *player2)
+void matches_game()
 {
-	int win;
+	int win,player, matches = 100;
+	char *player1;
+	char *player2;
+	player1 = malloc(sizeof(char) * 25);
+	player2 = malloc(sizeof(char) * 25);
 	ask_nicknames(player1,player2);
 	system ("clear");
-	int player, matches = 100;
 	player = 1;
 	while (1){
 		if (player == 1){
@@ -176,7 +179,7 @@ int matches_game(char *player1, char *player2)
 			win = matches_turn(player1, &matches);
 			if (win == 1){
 				system("clear");
-				printf("You won,%s. Easy win - Eazy life!\n", player1);
+				printf("You won,%s. Eazy win - Eazy life!\n", player1);
 				exit(0);
 			}
 		}
@@ -186,7 +189,7 @@ int matches_game(char *player1, char *player2)
 			win = matches_turn(player2, &matches);
 			if (win == 1){
 				system("clear");
-				printf("You won,%s. Easy win - Eazy life!\n", player2);
+				printf("You won,%s. Eazy win - Eazy life!\n", player2);
 				exit(0);
 			}
 		}
@@ -198,7 +201,6 @@ int matches_game(char *player1, char *player2)
 			player = 1;
 		}
 	}
-	return 0;
 }
 
 void flush_input_for_match()
