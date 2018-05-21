@@ -40,7 +40,7 @@ char *enter_number(char *player) {
 		number [read] = ch;
 
 		read++;
-	} while (read != 5 && ch != '\n');
+	} while (read != 5 &&  ch != '\n');
 
 	printf(DEFAULT);
 
@@ -58,17 +58,20 @@ void flush_input() {
 
 int check_number(char *number) {
 
-	for (int i = 0; i < 5; i++) {
-		if (!isdigit(number[i]) && number[i] != '\n') {
-			if (!strchr(number, '\n')) {
-				flush_input();
-			}
+	if (!strchr(number, '\n')) {
+		return -4;
+	}
+
+	int i;
+	for (i = 0; number[i] != '\n'; i++) {
+		if (!isdigit(number[i])) {
 			return -1;
 		}
 	}
 
-	if (number[4] == '\n') {
-		number[4] = '\0';
+	if (i != 4) {
+		return -3;
+	} else {
 		for (int i = 0; i < 4 ; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (number[i] == number[j] && i != j) {
@@ -76,15 +79,10 @@ int check_number(char *number) {
 				}
 			}
 		}
-		return 0;
-	} else {
-		if (!strchr(number, '\n')) {
-			flush_input();
-		}
-		return -3;
 	}
-}
 
+	return 0;
+}
 int guessing(char *player, char *number) {
 	char * input;
 	int bucow = 0;
@@ -132,7 +130,9 @@ void print_error(int error) {
 	} else if (error == -2) {
 		printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats) \n" DEFAULT);
 	}  else if (error == -3) {
-		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number) \n" DEFAULT);
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number(digits < 4)\n" DEFAULT);
+	} else if (error == -4) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number)(digits > 4)\n" DEFAULT);
 	}
 }
 
