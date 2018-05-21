@@ -30,7 +30,6 @@ int check_match(char *value)
 		}
 
 	} else {
-		flush_input_for_match();
 		return -1;
 	}
 	return 0;
@@ -67,8 +66,6 @@ int check_nickname(char *player)
 	}
 	
 	if (flag == 0) {
-
-		flush_input_for_match();
 		return -2;
 
 	} else {
@@ -88,6 +85,7 @@ int ask_nicknames(char *player1, char *player2)
 		player1 = enter_nickname(player1);
 		flag = check_nickname(player1);
 		if (flag == -2){
+			flush_input_for_match();
 			system ("clear");
 			printf("Too much letters in a string \n");
 			continue;
@@ -103,6 +101,7 @@ int ask_nicknames(char *player1, char *player2)
 		player2 = enter_nickname(player2);
 		flag = check_nickname(player2);
 		if (flag == -2){
+			flush_input_for_match();
 			system ("clear");
 			printf("Too much letters in a string \n");
 			continue;
@@ -143,6 +142,7 @@ int matches_turn(char *player, int *matches)
 		}
 		
 		if (flag == -1) {
+				flush_input_for_match();
 				printf("Error Input! Too much symbols\n");
 				continue;
 		}
