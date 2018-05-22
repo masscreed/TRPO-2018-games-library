@@ -35,6 +35,24 @@ int check_match(char *value)
 	return 0;
 }
 
+int check_heap (int *heap, int turn)
+{
+	if(*heap < turn){
+		return -1;
+	}
+	
+	if(*heap > turn){
+		*heap = *heap - turn;
+		return 0;
+	}
+
+	if(*heap == turn){
+		return -2;
+	}
+	
+	return 1;
+}
+
 char *enter_nickname(char *player)
 {
 	char ch;
@@ -124,7 +142,7 @@ int matches_turn(char *player, int *matches)
 {
 	char *value;
 	value = calloc(sizeof(char), 3);
-	int num, flag;
+	int num, flag, check;
 	printf("%s ,your turn\n", player);
 	printf("Enter how much matches you want to take\n");
 	while (1) {
@@ -148,19 +166,26 @@ int matches_turn(char *player, int *matches)
 		}
 		num = atoi(value);
 
+		check = check_heap(matches, num);
+		if (check == -1){
+			printf("Value is too large for heap!\n");
+			continue;
+		}
+
+		if (check == 0){
+			system ("clear");
+			printf("Matches left %d\n", *matches);
+			return 0;
+		}
+
+		if (check == -2){	
+			return 1;
+		}
+
 		break;	
 	}
 
-	*matches = *matches - num;
-
-	if (*matches < 1){
-		return 1;
-	}
-
-	system ("clear");
-	printf("Matches left %d\n", *matches);
-
-	return 0;
+	return 2;
 }
 
 void matches_game()

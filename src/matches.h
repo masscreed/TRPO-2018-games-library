@@ -8,5 +8,6 @@ int check_match(char *value);
 void matches_game();
 void flush_input_for_match();
 char *enter_matches();
+int check_heap (int *heap, int turn);
 
 #endif
