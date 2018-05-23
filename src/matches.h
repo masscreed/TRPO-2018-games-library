@@ -1,10 +1,13 @@
 #ifndef MATCHES_H
 #define MATCHES_H
 
-int correct_match(int value);
-int nicknames(char *player1, char *player2);
-int matches_game(char *player1, char *player2);
+int ask_nickname(char *player, int index);
+char *enter_nickname(char *player);
+int check_nickname(char *player);
+int check_match(char *value);
+void matches_game();
+void flush_input_for_match();
+char *enter_matches();
+int check_heap (int *heap, int turn);
 
 #endif
-
-

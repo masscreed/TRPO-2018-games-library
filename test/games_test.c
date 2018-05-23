@@ -3,120 +3,174 @@
 #include "ctest.h"
 #include <stdio.h>
 
-CTEST (mathces_test_true, correct_match)
+CTEST (mathces_test_true, check_match)
 {
 	// Given
-	int value = 5;
+	char value[] = "5\n";
 
 	// When
-	int result = correct_match (value);
+	int result = check_match (value);
 
 	// Then
 	const int expected = 0;
 	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (matches_test_false_higher, correct_match)
+CTEST (matches_test_false_symbol, check_match)
 {
 	// Given
-	int value = 1337;
+	char value[] = "1a\n";
 
 	// When
-	int result = correct_match (value);
+	int result = check_match (value);
 
 	// Then
-	const int expected = 1;
+	const int expected = -2;
 	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (matches_test_false_lower, correct_match)
+CTEST (matches_test_false_large_value, check_match)
 {
 	// Given
-	int value = -228;
+	char value[] = "115\n";
 
 	// When
-	int result = correct_match (value);
+	int result = check_match (value);
 
 	// Then
-	const int expected = 1;
+	const int expected = -1;
 	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (bulls_test_en_false, enter_number)
+CTEST (matches_test_false_incorrect_value, check_match)
 {
-	//Given
-	char n[] = "sxs";
+	// Given
+	char value[] = "13\n";
 
-	//When
-	char *result = enter_number(n);
+	// When
+	int result = check_match (value);
 
-	//Then
-	const char *expected = NULL;
-	ASSERT_STR(expected, result);
+	// Then
+	const int expected = -3;
+	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (bulls_test_en_true, enter_number)
+CTEST (matches_test_true, check_nickname)
 {
-	fputs ("1352\n", stdin);
-	//Given
-	char n[] = "sxs";
+	// Given
+	char player[] = "MexicoFlexico\n";
 
-	//When
-	char *result = enter_number(n);
+	// When
+	int result = check_nickname (player);
 
-	//Then
-	const char *expected = "1352\n";
-	ASSERT_STR(expected, result);
+	// Then
+	const int expected = 0;
+	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (bulls_test_cn_false, check_number)
+CTEST (matches_test_false, check_nickname)
 {
-	//Given
-	char n[] = "1234567\n";
+	// Given
+	char player[] = "abcdefgh1234536fkowwqrrkkwp\n";
 
-	//When
-	int result = check_number(n);
+	// When
+	int result = check_nickname (player);
 
-	//Then
-	const int expected = -1;
-	ASSERT_EQUAL(expected, result);
+	// Then
+	const int expected = -2;
+	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (bulls_test_cn_false1, check_number)
+CTEST (matches_heap_test_true_turn_equals_heap, check_heap)
 {
 	//Given
-	char n[] = "qwerty\n";
+	int heap = 7;
+	int turn = 7;
 
 	//When
-	int result = check_number(n);
-
-	//Then
-	const int expected = -1;
-	ASSERT_EQUAL(expected, result);
-}
-
-CTEST (bulls_test_cn_false2, check_number)
-{
-	//Given
-	char n[] = "1221\n";
-
-	//When
-	int result = check_number(n);
-
-	//Then
-	const int expected = -1;
-	ASSERT_EQUAL(expected, result);
-}
-
-CTEST (bulls_test_cn_true, check_number)
-{
-	//Given
-	char n[] = "1234\n";
-
-	//When
-	int result = check_number(n);
+	int result = check_heap (&heap, turn);
 
 	//Then
 	const int expected = 0;
+	ASSERT_EQUAL (expected, result);
+}
+
+CTEST (matches_heap_test_true_turn, check_heap)
+{
+	//Given
+	int heap = 7;
+	int turn = 5;
+
+	//When
+	int result = check_heap (&heap, turn);
+
+	//Then
+	const int expected = 0;
+	ASSERT_EQUAL (expected, result);
+}
+
+CTEST (matches_heap_test_false_large_turn, check_heap)
+{
+	//Given
+	int heap = 7;
+	int turn = 10;
+
+	//When
+	int result = check_heap (&heap, turn);
+
+	//Then
+	const int expected = -1;
+	ASSERT_EQUAL (expected, result);
+}
+
+CTEST (bulls_test_false_symbol, check_number)
+{
+	//Given
+	char n[] = "123ab\n";
+
+	//When
+	int result = check_number (n);
+
+	//Then
+	const int expected = -1;
+	ASSERT_EQUAL(expected, result);
+}
+
+CTEST (bulls_test_false_equals, check_number)
+{
+	//Given
+	char n[] = "4124\n";
+
+	//When
+	int result = check_number(n);
+
+	//Then
+	const int expected = -2;
+	ASSERT_EQUAL(expected, result);
+}
+
+CTEST (bulls_test_false_lenght_small, check_number)
+{
+	//Given
+	char n[] = "13\n";
+
+	//When
+	int result = check_number(n);
+
+	//Then
+	const int expected = -3;
+	ASSERT_EQUAL(expected, result);
+}
+
+CTEST (bulls_test_false_length_large, check_number)
+{
+	//Given
+	char n[] = "12345";
+
+	//When
+	int result = check_number(n);
+
+	//Then
+	const int expected = -4;
 	ASSERT_EQUAL(expected, result);
 }
