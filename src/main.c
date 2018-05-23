@@ -7,6 +7,6 @@
 int main()
 {
 	system("clear");
-	matches_game();
+	bulls_game();
 	return 0;
 }

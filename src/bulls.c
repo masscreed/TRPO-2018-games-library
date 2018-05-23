@@ -5,7 +5,59 @@
 #include <ctype.h>
 #include <string.h>
 #include "bulls.h"
+#include "matches.h"
 
+
+//Input functions
+char *enter_number(char *player) {
+	char ch;
+	char *number = calloc(5, sizeof(char));
+	if (number == NULL) {
+		return NULL;
+	}
+	int read = 0;
+
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD" enter number: " DEFAULT, player);
+	printf(GRAY BLACKF BOLD);
+
+	do {
+		ch = (char) getchar ();
+
+		number [read] = ch;
+
+		read++;
+	} while (read != 5 &&  ch != '\n');
+
+	printf(DEFAULT);
+
+	return number;
+}
+
+
+//Game logic functions
+void bulls_game() {
+	system("clear");
+
+	char player1[25];
+	char player2[25];
+
+	ask_nickname(player1, 1);
+	ask_nickname(player2, 2);
+
+	char *p1_number = create_player_num(player1);
+	system("clear");
+	char *p2_number = create_player_num(player2);
+	system("clear");
+
+	int priority = first_player();
+
+	if (priority == 1) {
+		turns_loop(player1, player2, p1_number, p2_number);
+	} else {
+		turns_loop(player2, player1, p2_number, p1_number);
+	}
+}
 
 int first_player() {
 
@@ -23,68 +75,95 @@ int first_player() {
 
 }
 
-char *enter_number(char *player) {
-	char ch;
-	char *number = calloc(5, sizeof(char));
-	if (number == NULL) {
-		return NULL;
-	}
-	int read = 0;
+char *create_player_num(char *player) {
+	char *input = NULL;
 
-	printf(AQUA BLACKF BOLD "%s enter number: " DEFAULT, player);
-	printf(GREEN BLACKF BOLD);
+	printf(BLACKF AQUA BOLD "CREATING PLAYER NUMBER FOR GAME\n\n" DEFAULT);
 
-	do {
-		ch = getchar ();
+	while (1) {
+		input = enter_number(player);
+		int error = 0;
 
-		number [read] = ch;
+		if (input != NULL) {
+			error = check_number(input);
 
-		read++;
-	} while (read != 5 &&  ch != '\n');
-
-	printf(DEFAULT);
-
-	return number;
-}
-
-void flush_input() {
-	char c;
-
-	c = getc(stdin);
-	while (c != '\n') {
-		c = getc(stdin);
-	}
-}
-
-int check_number(char *number) {
-
-	if (!strchr(number, '\n')) {
-		return -4;
-	}
-
-	int i;
-	for (i = 0; number[i] != '\n'; i++) {
-		if (!isdigit(number[i])) {
-			return -1;
+			if (error) {
+				print_error(error);
+				if (error == NOT_4_DIGIT_MORE) {
+					flush_input();
+				}
+				continue;
+			} else {
+				return input;
+			}
+		} else {
+			continue;
 		}
 	}
+}
 
-	if (i != 4) {
-		return -3;
-	} else {
-		for (int i = 0; i < 4 ; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (number[i] == number[j] && i != j) {
-					return -2;
-				}
+void turns_loop(char *player1, char *player2, char *p1_number, char *p2_number) {
+	int turn = 1;
+
+	while (1) {
+		if (turn == 1) {
+			print_priority(player1);
+		} else if ((turn - 1) % 4 == 0) {
+			printf(BLACKF BROWN BOLD "---------------------------------------------------------------------------------------------------------\n" DEFAULT);
+			print_priority(player1);
+		}
+
+		print_turn(turn);
+		if (make_turn(player1, p2_number)) {
+			printf(BLACKF GRAY BOLD "%s" DEFAULT
+				   BLACKF AQUA BOLD " guessed" DEFAULT
+				   BLACKF GRAY BOLD " %s" DEFAULT
+				   BLACKF AQUA BOLD " number\n" DEFAULT, player1, player2);
+			printf(BLACKF BROWN BOLD "LAST CHANCE FOR" DEFAULT
+				   BLACKF GRAY BOLD " %s\n\n" DEFAULT, player2);
+
+			if (make_turn(player2, p1_number)) {
+				system("clear");
+				print_draw(player2, player1, p2_number, p1_number);
+				return;
+			} else {
+				system("clear");
+				print_win(player1, player2, p1_number, p2_number);
+				return;
+			}
+		} else {
+			turn++;
+
+			print_turn(turn);
+			if (make_turn(player2, p1_number)) {
+				system("clear");
+				print_win(player2, player1, p2_number, p1_number);
+				return;
+			} else {
+				turn++;
+				continue;
 			}
 		}
 	}
-
-	return 0;
 }
+
+int make_turn(char *player, char *number) {
+	int bulls = 0;
+	int cows = 0;
+
+	int bullcow = guessing(player, number);
+	print_bulls_cows(bullcow);
+	find_out_bull_cow(&bulls, &cows, bullcow);
+
+	if (bulls == 4) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 int guessing(char *player, char *number) {
-	char * input;
+	char *input;
 	int bucow = 0;
 
 	while (1) {
@@ -116,24 +195,103 @@ int guessing(char *player, char *number) {
 	return bucow;
 }
 
+void find_out_bull_cow(int *bulls, int *cows, int bullcow) {
+	*bulls = bullcow / 10;
+	*cows = bullcow % 10;
+}
+
+
+//Output functions
+void print_error(int error) {
+	if (error == SMBL_IN_INPUT) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (letters in input)\n" DEFAULT);
+	} else if (error == DIGITS_REPEATS) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats)\n" DEFAULT);
+	}  else if (error == NOT_4_DIGIT_LESS) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number(digits < 4)\n" DEFAULT);
+	} else if (error == NOT_4_DIGIT_MORE) {
+		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number)(digits > 4)\n" DEFAULT);
+	}
+}
+
+void print_priority(char *player) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD " START GAME\n\n" DEFAULT, player);
+}
+
+void print_turn(int turn) {
+	printf(BLACKF GRAY BOLD "%d" DEFAULT
+		   BLACKF BROWN BOLD " TURN\n\n" DEFAULT, turn);
+}
+
 void print_bulls_cows(int bullcow) {
 	int bulls = bullcow / 10;
 	int cows = bullcow % 10;
 
 	printf(BLACKF BOLD RED "Bulls: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", bulls);
-	printf(BLACKF BOLD GREEN "Cows: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", cows);
+	printf(BLACKF BOLD BROWN "Cows: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n\n", cows);
 }
 
-void print_error(int error) {
-	if (error == -1) {
-		printf(RED BLACKF BOLD "ERROR IN INPUT (letters in input) \n" DEFAULT);
-	} else if (error == -2) {
-		printf(RED BLACKF BOLD "ERROR IN INPUT (numbers repeats) \n" DEFAULT);
-	}  else if (error == -3) {
-		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number(digits < 4)\n" DEFAULT);
-	} else if (error == -4) {
-		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number)(digits > 4)\n" DEFAULT);
+void print_draw(char *saved, char *second, char *sav_num, char *sec_num) {
+	printf(BLACKF BROWN BOLD "DRAW" DEFAULT
+		   BLACKF GRAY BOLD " (%s guessed %s number on" DEFAULT
+		   BLACKF BROWN BOLD " LAST CHANCE" DEFAULT
+		   BLACKF GRAY BOLD ") \n\n" DEFAULT, saved, second);
+
+	print_player_and_num(saved, sav_num);
+	print_player_and_num(second, sec_num);
+}
+
+void print_win(char *winner, char *loser, char *win_num, char *l_num) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF GREEN BOLD " WIN (GJ)\n\n" DEFAULT, winner);
+	print_player_and_num(winner, win_num);
+	print_player_and_num(loser, l_num);
+}
+
+void print_player_and_num(char *player, char *number) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD " number was ->" DEFAULT
+		   BLACKF GRAY BOLD " %s\n" DEFAULT, player, number);
+}
+
+
+//Additional functions
+void flush_input() {
+	char c;
+
+	c = (char) getc(stdin);
+	while (c != '\n') {
+		c = (char) getc(stdin);
 	}
 }
 
 
+//Input logic functions
+int check_number(char *number) {
+
+	if (!strchr(number, '\n')) {
+		return NOT_4_DIGIT_MORE;
+	}
+
+	int i;
+	for (i = 0; number[i] != '\n'; i++) {
+		if (!isdigit(number[i])) {
+			return SMBL_IN_INPUT;
+		}
+	}
+
+	if (i != 4) {
+		return NOT_4_DIGIT_LESS;
+	} else {
+		for (i = 0; i < 4 ; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (number[i] == number[j] && i != j) {
+					return DIGITS_REPEATS;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
