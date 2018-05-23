@@ -81,6 +81,48 @@ CTEST (matches_test_false, check_nickname)
 	ASSERT_EQUAL (expected, result);
 }
 
+CTEST (matches_heap_test_true_last_turn, check_heap)
+{
+	//Given
+	int heap = 7;
+	int turn = 7;
+
+	//When
+	int result = check_heap (&heap, turn);
+
+	//Then
+	const int expected = -2;
+	ASSERT_EQUAL (expected, result);
+}
+
+CTEST (matches_heap_test_true_turn, check_heap)
+{
+	//Given
+	int heap = 7;
+	int turn = 5;
+
+	//When
+	int result = check_heap (&heap, turn);
+
+	//Then
+	const int expected = 0;
+	ASSERT_EQUAL (expected, result);
+}
+
+CTEST (matches_heap_test_false_large_turn, check_heap)
+{
+	//Given
+	int heap = 7;
+	int turn = 10;
+
+	//When
+	int result = check_heap (&heap, turn);
+
+	//Then
+	const int expected = -1;
+	ASSERT_EQUAL (expected, result);
+}
+
 CTEST (bulls_test_false_symbol, check_number)
 {
 	//Given
