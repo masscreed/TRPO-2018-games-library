@@ -81,7 +81,7 @@ CTEST (matches_test_false, check_nickname)
 	ASSERT_EQUAL (expected, result);
 }
 
-CTEST (matches_heap_test_true_last_turn, check_heap)
+CTEST (matches_heap_test_true_turn_equals_heap, check_heap)
 {
 	//Given
 	int heap = 7;
@@ -91,7 +91,7 @@ CTEST (matches_heap_test_true_last_turn, check_heap)
 	int result = check_heap (&heap, turn);
 
 	//Then
-	const int expected = -2;
+	const int expected = 0;
 	ASSERT_EQUAL (expected, result);
 }
 
