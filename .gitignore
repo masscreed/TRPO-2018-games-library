@@ -1,5 +1,6 @@
 # Clion artifacts
 
+!CMakeLists.txt
 /cmake-build-debug/
 /.idea/
 
