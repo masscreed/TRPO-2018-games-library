@@ -7,13 +7,14 @@
 
 int check_match(char *value)
 {
+
 	int i,flag = 0,j;
 	if(strcmp(value,"q\n") == 0){
 		return -4;
 	}
 
-	for(i = 0;i < 3;i++) {
 
+	for(i = 0;i < 3;i++) {
 		if (value[i] == '\n'){
 			flag = 1;
 			break;
@@ -22,8 +23,8 @@ int check_match(char *value)
 
 	if (flag == 1) {
 		j = i;
-		for(i = 0;i < j;i++){
 
+		for(i = 0;i < j;i++){
 			if (!isdigit(value[i])) {
 				return -2;
 			}
@@ -32,10 +33,10 @@ int check_match(char *value)
 		if (atoi(value) > 10 || atoi(value) < 1) {
 			return -3;
 		}
-
 	} else {
 		return -1;
 	}
+
 	return 0;
 }
 
@@ -65,13 +66,14 @@ char *enter_nickname(char *player)
 		player[i] = '\0';
 	}
 
+	printf(GRAY BLACKF BOLD);
 	do {
-
 		ch = getchar ();
 		player[read] = ch;
 		read++;
 
 	} while (ch != '\n' && read != 25);
+	printf(DEFAULT);
 
 	return player;
 }
@@ -80,7 +82,6 @@ int check_nickname(char *player)
 {
 	int i,flag = 0;
 	for(i = 0;i < 25;i++) {
-
 		if (player[i] == '\n'){
 			flag = 1;
 			break;
@@ -89,11 +90,9 @@ int check_nickname(char *player)
 	
 	if (flag == 0) {
 		return -2;
-
 	} else {
 		return 0;
 	}
-	
 }
 
 int ask_nicknames(char *player1, char *player2)
@@ -101,31 +100,37 @@ int ask_nicknames(char *player1, char *player2)
 	int flag = 0;
 	
 	while (1){
-		printf(AQUA  BLACKF "Player 1, enter your nickname here\n" DEFAULT);
-		printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
-		printf(GREEN BLACKF);
+		printf(BLACKF GRAY BOLD "Player 1," DEFAULT
+			BLACKF AQUA BOLD " enter your nickname " DEFAULT);
+		printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
+
 		player1 = enter_nickname(player1);
 		flag = check_nickname(player1);
+
 		if (flag == -2){
 			flush_input_for_match();
 			system ("clear");
-			printf("Too much letters in a string \n");
+			printf(BLACKF RED BOLD "Too much letters in a string\n" DEFAULT);
 			continue;
 		} else {
 			break;
 		}
 	}
 
+	system("clear");
+
 	while (1){
-		printf(AQUA  BLACKF "Player 2, enter your nickname here\n" DEFAULT);
-		printf(AQUA  BLACKF"Maximum is 24 letters\n"DEFAULT);
-		printf(GREEN BLACKF);
+		printf(BLACKF GRAY BOLD "Player 2," DEFAULT
+			   BLACKF AQUA BOLD " enter your nickname " DEFAULT);
+		printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
+
 		player2 = enter_nickname(player2);
 		flag = check_nickname(player2);
+
 		if (flag == -2){
 			flush_input_for_match();
 			system ("clear");
-			printf("Too much letters in a string \n");
+			printf(BLACKF RED BOLD "Too much letters in a string \n" DEFAULT);
 			continue;
 		} else {
 			break;
@@ -137,7 +142,6 @@ int ask_nicknames(char *player1, char *player2)
 	player1[count - 1] = '\0';
 	count = strlen(player2);
 	player2[count - 1] = '\0';
-	system ("clear");
 
 	return 0;
 }
@@ -147,43 +151,46 @@ int matches_turn(char *player, int *matches)
 	char *value;
 	value = calloc(sizeof(char), 3);
 	int num, flag, check;
-	printf("%s ,your turn\n", player);
-	printf("Enter how much matches you want to take\n");
+
+	printf(BLACKF GRAY BOLD "%s," DEFAULT
+		   BLACKF AQUA BOLD " your turn\n" DEFAULT, player);
+
 	while (1) {
+		printf(BLACKF AQUA BOLD "Enter how much matches you want to take -> " DEFAULT);
 		value = enter_matches();
 		flag = check_match(value);
 
 		if (flag == -2) {
-				printf("Error Input! Incorrect symbols\n");
+				printf(BLACKF RED BOLD "Error Input! Incorrect symbols\n" DEFAULT);
 				continue;
 		}
 
 		if (flag == -3) {
-				printf("Error Input! Value is out of range\n");
+				printf(BLACKF RED BOLD "Error Input! Value is out of range\n" DEFAULT);
 				continue;
 		}
 
 		if (flag == -4) {
-				printf("You entered 'q'. Quit...\n");
-				exit(2);
+			printf(BLACKF BROWN BOLD "You entered 'q'. Quit...\n" DEFAULT);
+			exit(2);
 		}
-		
+
 		if (flag == -1) {
 				flush_input_for_match();
-				printf("Error Input! Too much symbols\n");
+				printf(BLACKF RED BOLD "Error Input! Too much symbols\n" DEFAULT);
 				continue;
 		}
 		num = atoi(value);
 
 		check = check_heap(matches, num);
 		if (check == -1){
-			printf("Value is too large for heap!\n");
+			printf(BLACKF RED BOLD "Value is too large for heap!\n" DEFAULT);
 			continue;
 		}
 
 		if (check == 0){
 			system ("clear");
-			printf("Matches left %d\n", *matches);
+			printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
 			return 0;
 		}
 
@@ -213,7 +220,9 @@ void matches_game()
 			win = matches_turn(player1, &matches);
 			if (win == 1){
 				system("clear");
-				printf("You won,%s. Eazy win - Eazy life!\n", player1);
+				printf(BLACKF GREEN BOLD "You won," DEFAULT
+					   BLACKF GRAY BOLD " %s.\n\n" DEFAULT
+					   BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player1);
 				exit(0);
 			}
 		}
@@ -223,7 +232,9 @@ void matches_game()
 			win = matches_turn(player2, &matches);
 			if (win == 1){
 				system("clear");
-				printf("You won,%s. Eazy win - Eazy life!\n", player2);
+				printf(BLACKF GREEN BOLD "You won," DEFAULT
+					   BLACKF GRAY BOLD " %s.\n\n" DEFAULT
+					   BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player2);
 				exit(0);
 			}
 		}
@@ -247,7 +258,7 @@ void flush_input_for_match()
 	}
 }
 
-char *enter_matches(char *player)
+char *enter_matches()
 {
 	char ch;
 	char *number = calloc(3, sizeof(char));
@@ -255,7 +266,7 @@ char *enter_matches(char *player)
 
 	do {
 		ch = getchar ();
-
+		
 		number [read] = ch;
 		read++;
 	} while (read != 3 && ch != '\n');

@@ -6,6 +6,7 @@
 
 int main()
 {
+	system("clear");
 	matches_game();
 	return 0;
 }
