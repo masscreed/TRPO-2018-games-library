@@ -46,13 +46,8 @@ int check_heap (int *heap, int turn)
 		return -1;
 	}
 	
-	if(*heap > turn){
-		*heap = *heap - turn;
+	if(*heap >= turn){
 		return 0;
-	}
-
-	if(*heap == turn){
-		return -2;
 	}
 	
 	return 1;
@@ -95,17 +90,17 @@ int check_nickname(char *player)
 	}
 }
 
-int ask_nicknames(char *player1, char *player2)
+int ask_nickname(char *player, int index)
 {
-	int flag = 0;
+	int flag = 0, count;
 	
 	while (1){
-		printf(BLACKF GRAY BOLD "Player 1," DEFAULT
-			BLACKF AQUA BOLD " enter your nickname " DEFAULT);
+		printf(BLACKF GRAY BOLD "Player %d," DEFAULT
+			BLACKF AQUA BOLD " enter your nickname " DEFAULT, index);
 		printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
 
-		player1 = enter_nickname(player1);
-		flag = check_nickname(player1);
+		player = enter_nickname(player);
+		flag = check_nickname(player);
 
 		if (flag == -2){
 			flush_input_for_match();
@@ -117,31 +112,10 @@ int ask_nicknames(char *player1, char *player2)
 		}
 	}
 
+	count = strlen(player);
+	player[count - 1] = '\0';
+	
 	system("clear");
-
-	while (1){
-		printf(BLACKF GRAY BOLD "Player 2," DEFAULT
-			   BLACKF AQUA BOLD " enter your nickname " DEFAULT);
-		printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
-
-		player2 = enter_nickname(player2);
-		flag = check_nickname(player2);
-
-		if (flag == -2){
-			flush_input_for_match();
-			system ("clear");
-			printf(BLACKF RED BOLD "Too much letters in a string \n" DEFAULT);
-			continue;
-		} else {
-			break;
-		}
-	}
-
-	int count;
-	count = strlen(player1);
-	player1[count - 1] = '\0';
-	count = strlen(player2);
-	player2[count - 1] = '\0';
 
 	return 0;
 }
@@ -189,16 +163,18 @@ int matches_turn(char *player, int *matches)
 		}
 
 		if (check == 0){
-			system ("clear");
-			printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
-			return 0;
-		}
+			*matches = *matches - num;
 
-		if (check == -2){	
-			return 1;
-		}
+			if(*matches == 0){
+				return 1;
 
-		break;	
+			} else {
+				system ("clear");
+				printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
+				return 0;
+			}
+		}
+	
 	}
 
 	return 2;
@@ -211,7 +187,8 @@ void matches_game()
 	char *player2;
 	player1 = malloc(sizeof(char) * 25);
 	player2 = malloc(sizeof(char) * 25);
-	ask_nicknames(player1,player2);
+	ask_nickname(player1, 1);
+	ask_nickname(player2, 2);
 	system ("clear");
 	player = 1;
 	while (1){

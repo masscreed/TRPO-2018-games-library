@@ -1,7 +1,7 @@
 #ifndef MATCHES_H
 #define MATCHES_H
 
-int ask_nicknames(char *player1, char *player2);
+int ask_nickname(char *player, int index);
 char *enter_nickname(char *player);
 int check_nickname(char *player);
 int check_match(char *value);
