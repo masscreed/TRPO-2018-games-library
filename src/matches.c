@@ -8,6 +8,10 @@
 int check_match(char *value)
 {
 	int i,flag = 0,j;
+	if(strcmp(value,"q\n") == 0){
+		return -4;
+	}
+
 	for(i = 0;i < 3;i++) {
 
 		if (value[i] == '\n'){
@@ -158,6 +162,11 @@ int matches_turn(char *player, int *matches)
 				printf("Error Input! Value is out of range\n");
 				continue;
 		}
+
+		if (flag == -4) {
+				printf("You entered 'q'. Quit...\n");
+				exit(2);
+		}
 		
 		if (flag == -1) {
 				flush_input_for_match();
@@ -246,11 +255,6 @@ char *enter_matches(char *player)
 
 	do {
 		ch = getchar ();
-
-		if (ch == 'q'){
-			printf("You entered 'q'. Exit...\n");
-			exit(0);
-		}
 
 		number [read] = ch;
 		read++;
