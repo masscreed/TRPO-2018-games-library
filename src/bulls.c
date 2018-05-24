@@ -82,10 +82,9 @@ char *create_player_num(char *player) {
 
 	while (1) {
 		input = enter_number(player);
-		int error = 0;
 
 		if (input != NULL) {
-			error = check_number(input);
+			int error = check_number(input);
 
 			if (error) {
 				print_error(error);
@@ -97,6 +96,7 @@ char *create_player_num(char *player) {
 				return input;
 			}
 		} else {
+			printf(RED BLACKF BOLD "ERROR IN ALLOCATION (calloc)\n" DEFAULT);
 			continue;
 		}
 	}
@@ -163,7 +163,7 @@ int make_turn(char *player, char *number) {
 }
 
 int guessing(char *player, char *number) {
-	char *input;
+	char *input = NULL;
 	int bucow = 0;
 
 	while (1) {
@@ -171,13 +171,18 @@ int guessing(char *player, char *number) {
 
 		if (input != NULL) {
 			int error = check_number(input);
-			if (!error) {
-				break;
-			} else {
+
+			if (error) {
 				print_error(error);
+				if (error == NOT_4_DIGIT_MORE) {
+					flush_input();
+				}
 				continue;
+			} else {
+				break;
 			}
 		} else {
+			printf(RED BLACKF BOLD "ERROR IN ALLOCATION (calloc)\n" DEFAULT);
 			continue;
 		}
 	}
