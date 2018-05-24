@@ -9,7 +9,10 @@ void matches_game();
 void flush_input_for_match();
 char *enter_matches();
 int check_heap (int *heap, int turn);
-void flag_errors (int flag);
-void win_show(int win, char *player);
+void print_flag_errors (int flag);
+void print_winnner(int win, char *player);
+void print_ask_name(char *player, int index);
+void print_over(int i);
+void print_matches_turn(char *player, int i, int *matches);
 
 #endif

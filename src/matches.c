@@ -53,7 +53,74 @@ int check_heap (int *heap, int turn)
 	return 1;
 }
 
-void flag_errors (int flag)
+int check_nickname(char *player)
+{
+	int i,flag = 0;
+	for(i = 0;i < 25;i++) {
+		if (player[i] == '\n'){
+			flag = 1;
+			break;
+		}
+	}
+	
+	if (flag == 0) {
+		return -2;
+	} else {
+		return 0;
+	}
+}
+
+void print_ask_name(char *player, int index)
+{
+	printf(BLACKF GRAY BOLD "Player %d," DEFAULT
+			BLACKF AQUA BOLD " enter your nickname " DEFAULT, index);
+	printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
+
+}
+
+void print_winnner(int win, char *player)
+{
+	if (win == 1){
+		system("clear");
+		printf(BLACKF GREEN BOLD "You won," DEFAULT
+		BLACKF GRAY BOLD " %s.\n\n" DEFAULT
+		BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player);
+		exit(0);
+	}
+}
+
+void print_over(int i)
+{
+	if(i == -1){
+		printf(BLACKF RED BOLD "Value is too large for heap!\n" DEFAULT);
+	}
+	
+	if(i == -2){
+		printf(BLACKF RED BOLD "Too much letters in a string\n" DEFAULT);
+	}
+}
+
+void print_matches_turn(char *player, int i, int *matches)
+{
+	if(i == 1){
+		printf(BLACKF GRAY BOLD "%s," DEFAULT
+			BLACKF AQUA BOLD " your turn\n" DEFAULT, player);
+	}
+
+	if(i == 2){
+		printf(BLACKF AQUA BOLD "Enter how much matches you want to take -> "
+			DEFAULT);
+	}
+
+	if(i == 3){
+		system ("clear");
+		printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
+	}
+
+	
+}
+
+void print_flag_errors (int flag)
 {
 	if (flag == -2) {
 		printf(BLACKF RED BOLD "Error Input! Incorrect symbols\n" DEFAULT);
@@ -94,42 +161,13 @@ char *enter_nickname(char *player)
 	return player;
 }
 
-int check_nickname(char *player)
-{
-	int i,flag = 0;
-	for(i = 0;i < 25;i++) {
-		if (player[i] == '\n'){
-			flag = 1;
-			break;
-		}
-	}
-	
-	if (flag == 0) {
-		return -2;
-	} else {
-		return 0;
-	}
-}
-
-void win_show(int win, char *player)
-{
-	if (win == 1){
-		system("clear");
-		printf(BLACKF GREEN BOLD "You won," DEFAULT
-		BLACKF GRAY BOLD " %s.\n\n" DEFAULT
-		BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player);
-		exit(0);
-	}
-}
 
 int ask_nickname(char *player, int index)
 {
 	int flag = 0, count;
 	
 	while (1){
-		printf(BLACKF GRAY BOLD "Player %d," DEFAULT
-			BLACKF AQUA BOLD " enter your nickname " DEFAULT, index);
-		printf(BLACKF BROWN BOLD "(Maximum is 24 letters) -> " DEFAULT);
+		print_ask_name(player, index);
 
 		player = enter_nickname(player);
 		flag = check_nickname(player);
@@ -137,7 +175,7 @@ int ask_nickname(char *player, int index)
 		if (flag == -2){
 			flush_input_for_match();
 			system ("clear");
-			printf(BLACKF RED BOLD "Too much letters in a string\n" DEFAULT);
+			print_over(flag);
 			continue;
 		} else {
 			break;
@@ -158,16 +196,15 @@ int matches_turn(char *player, int *matches)
 	value = calloc(sizeof(char), 3);
 	int num, flag, check;
 
-	printf(BLACKF GRAY BOLD "%s," DEFAULT
-		   BLACKF AQUA BOLD " your turn\n" DEFAULT, player);
+	print_matches_turn(player, 1, matches);
 
 	while (1) {
-		printf(BLACKF AQUA BOLD "Enter how much matches you want to take -> " DEFAULT);
+		print_matches_turn(player, 2, matches);
 		value = enter_matches();
 		flag = check_match(value);
 
 		if(flag != 0){
-			flag_errors(flag);
+			print_flag_errors(flag);
 			continue;
 		}
 
@@ -175,7 +212,7 @@ int matches_turn(char *player, int *matches)
 
 		check = check_heap(matches, num);
 		if (check == -1){
-			printf(BLACKF RED BOLD "Value is too large for heap!\n" DEFAULT);
+			print_over(check);
 			continue;
 		}
 
@@ -186,8 +223,7 @@ int matches_turn(char *player, int *matches)
 				return 1;
 
 			} else {
-				system ("clear");
-				printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
+				print_matches_turn(player, 3, matches);
 				return 0;
 			}
 		}
@@ -212,13 +248,13 @@ void matches_game()
 		if (player == 1){
 
 			win = matches_turn(player1, &matches);
-			win_show(win, player1);
+			print_winnner(win, player1);
 		}
 	
 		if (player == 2){
 
 			win = matches_turn(player2, &matches);
-			win_show(win, player2);
+			print_winnner(win, player2);
 		}
 
 		if (player == 1){
