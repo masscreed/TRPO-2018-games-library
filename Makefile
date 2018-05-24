@@ -7,7 +7,7 @@ all: ./bin/games
 	$(C) ./build/src/main.o  ./build/src/matches.o ./build/src/bulls.o -o ./bin/games
 
 ./build/src/main.o: ./src/main.c
-	$(C) $(flag) ./src/main.c -o ./build/src/main.o
+	$(C) $(flag) -I thirdparty ./src/main.c -o ./build/src/main.o
 
 ./build/src/matches.o: ./src/matches.c ./src/matches.h
 	$(C) $(flag) -I thirdparty ./src/matches.c -o ./build/src/matches.o

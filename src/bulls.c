@@ -54,8 +54,10 @@ void bulls_game() {
 
 	if (priority == 1) {
 		turns_loop(player1, player2, p1_number, p2_number);
+		exit(0);
 	} else {
 		turns_loop(player2, player1, p2_number, p1_number);
+		exit(0);
 	}
 }
 
