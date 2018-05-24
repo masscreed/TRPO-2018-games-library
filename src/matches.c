@@ -53,6 +53,27 @@ int check_heap (int *heap, int turn)
 	return 1;
 }
 
+void flag_errors (int flag)
+{
+	if (flag == -2) {
+		printf(BLACKF RED BOLD "Error Input! Incorrect symbols\n" DEFAULT);
+	}
+
+	if (flag == -3) {
+		printf(BLACKF RED BOLD "Error Input! Value is out of range\n" DEFAULT);
+	}
+
+	if (flag == -4) {
+		printf(BLACKF BROWN BOLD "You entered 'q'. Quit...\n" DEFAULT);
+		exit(2);
+	}
+
+	if (flag == -1) {
+		flush_input_for_match();
+		printf(BLACKF RED BOLD "Error Input! Too much symbols\n" DEFAULT);
+	}
+}
+
 char *enter_nickname(char *player)
 {
 	char ch;
@@ -87,6 +108,17 @@ int check_nickname(char *player)
 		return -2;
 	} else {
 		return 0;
+	}
+}
+
+void win_show(int win, char *player)
+{
+	if (win == 1){
+		system("clear");
+		printf(BLACKF GREEN BOLD "You won," DEFAULT
+		BLACKF GRAY BOLD " %s.\n\n" DEFAULT
+		BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player);
+		exit(0);
 	}
 }
 
@@ -134,26 +166,11 @@ int matches_turn(char *player, int *matches)
 		value = enter_matches();
 		flag = check_match(value);
 
-		if (flag == -2) {
-				printf(BLACKF RED BOLD "Error Input! Incorrect symbols\n" DEFAULT);
-				continue;
+		if(flag != 0){
+			flag_errors(flag);
+			continue;
 		}
 
-		if (flag == -3) {
-				printf(BLACKF RED BOLD "Error Input! Value is out of range\n" DEFAULT);
-				continue;
-		}
-
-		if (flag == -4) {
-			printf(BLACKF BROWN BOLD "You entered 'q'. Quit...\n" DEFAULT);
-			exit(2);
-		}
-
-		if (flag == -1) {
-				flush_input_for_match();
-				printf(BLACKF RED BOLD "Error Input! Too much symbols\n" DEFAULT);
-				continue;
-		}
 		num = atoi(value);
 
 		check = check_heap(matches, num);
@@ -195,25 +212,13 @@ void matches_game()
 		if (player == 1){
 
 			win = matches_turn(player1, &matches);
-			if (win == 1){
-				system("clear");
-				printf(BLACKF GREEN BOLD "You won," DEFAULT
-					   BLACKF GRAY BOLD " %s.\n\n" DEFAULT
-					   BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player1);
-				exit(0);
-			}
+			win_show(win, player1);
 		}
 	
 		if (player == 2){
 
 			win = matches_turn(player2, &matches);
-			if (win == 1){
-				system("clear");
-				printf(BLACKF GREEN BOLD "You won," DEFAULT
-					   BLACKF GRAY BOLD " %s.\n\n" DEFAULT
-					   BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player2);
-				exit(0);
-			}
+			win_show(win, player2);
 		}
 
 		if (player == 1){
