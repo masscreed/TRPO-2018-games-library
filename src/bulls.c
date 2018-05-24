@@ -64,23 +64,17 @@ void bulls_game() {
 int first_player() {
 
 	int random;
-
 	srand(time(NULL));
 
 	random = (rand() % 1000) + 1;
 
-	if ((random % 2) == 0) {
-		return 1;
-	} else {
-		return 2;
-	}
-
+	return ((random % 2) == 0) ? 1 : 2;
 }
 
 char *create_player_num(char *player) {
 	char *input = NULL;
 
-	printf(BLACKF AQUA BOLD "CREATING PLAYER NUMBER FOR GAME\n\n" DEFAULT);
+	print_creating();
 
 	while (1) {
 		input = enter_number(player);
@@ -94,11 +88,11 @@ char *create_player_num(char *player) {
 					flush_input();
 				}
 				continue;
-			} else {
-				return input;
 			}
+
+			return input;
 		} else {
-			printf(RED BLACKF BOLD "ERROR IN ALLOCATION (calloc)\n" DEFAULT);
+			print_error(NULL_ERROR);
 			continue;
 		}
 	}
@@ -111,28 +105,23 @@ void turns_loop(char *player1, char *player2, char *p1_number, char *p2_number) 
 		if (turn == 1) {
 			print_priority(player1);
 		} else if ((turn - 1) % 4 == 0) {
-			printf(BLACKF BROWN BOLD "---------------------------------------------------------------------------------------------------------\n" DEFAULT);
+			print_blank();
 			print_priority(player1);
 		}
 
 		print_turn(turn);
 		if (make_turn(player1, p2_number)) {
-			printf(BLACKF GRAY BOLD "%s" DEFAULT
-				   BLACKF AQUA BOLD " guessed" DEFAULT
-				   BLACKF GRAY BOLD " %s" DEFAULT
-				   BLACKF AQUA BOLD " number\n" DEFAULT, player1, player2);
-			printf(BLACKF BROWN BOLD "LAST CHANCE FOR" DEFAULT
-				   BLACKF GRAY BOLD " %s\n\n" DEFAULT, player2);
+			print_last_chance(player1, player2);
 
 			if (make_turn(player2, p1_number)) {
 				system("clear");
 				print_draw(player2, player1, p2_number, p1_number);
-				return;
 			} else {
 				system("clear");
 				print_win(player1, player2, p1_number, p2_number);
-				return;
 			}
+
+			return;
 		} else {
 			turn++;
 
@@ -157,11 +146,7 @@ int make_turn(char *player, char *number) {
 	print_bulls_cows(bullcow);
 	find_out_bull_cow(&bulls, &cows, bullcow);
 
-	if (bulls == 4) {
-		return 1;
-	} else {
-		return 0;
-	}
+	return (bulls == 4) ? 1 : 0;
 }
 
 int guessing(char *player, char *number) {
@@ -180,11 +165,11 @@ int guessing(char *player, char *number) {
 					flush_input();
 				}
 				continue;
-			} else {
-				break;
 			}
+
+			break;
 		} else {
-			printf(RED BLACKF BOLD "ERROR IN ALLOCATION (calloc)\n" DEFAULT);
+			print_error(NULL_ERROR);
 			continue;
 		}
 	}
@@ -218,6 +203,8 @@ void print_error(int error) {
 		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number(digits < 4)\n" DEFAULT);
 	} else if (error == NOT_4_DIGIT_MORE) {
 		printf(RED BLACKF BOLD "ERROR IN INPUT (not 4-digit number)(digits > 4)\n" DEFAULT);
+	} else if (error == NULL_ERROR) {
+		printf(RED BLACKF BOLD "ERROR IN ALLOCATION (calloc)\n" DEFAULT);
 	}
 }
 
@@ -235,8 +222,8 @@ void print_bulls_cows(int bullcow) {
 	int bulls = bullcow / 10;
 	int cows = bullcow % 10;
 
-	printf(BLACKF BOLD RED "Bulls: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n", bulls);
-	printf(BLACKF BOLD BROWN "Cows: " CBLACKF BOLD PURPLE "%d" DEFAULT "\n\n", cows);
+	printf(BLACKF BOLD RED "Bulls: " CBLACKF BOLD PURPLE "%d\n" DEFAULT, bulls);
+	printf(BLACKF BOLD BROWN "Cows: " CBLACKF BOLD PURPLE "%d\n\n" DEFAULT, cows);
 }
 
 void print_draw(char *saved, char *second, char *sav_num, char *sec_num) {
@@ -301,4 +288,25 @@ int check_number(char *number) {
 	}
 
 	return 0;
+}
+
+void print_creating() {
+	printf(BLACKF AQUA BOLD "CREATING PLAYER SECRET NUMBER FOR GAME\n\n" DEFAULT);
+}
+
+void print_blank() {
+	printf(BLACKF BROWN BOLD);
+	for (int i = 0; i < 80; i++) {
+		printf("-");
+	}
+	printf("\n" DEFAULT);
+}
+
+void print_last_chance(char *player1, char *player2) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD " guessed" DEFAULT
+		   BLACKF GRAY BOLD " %s" DEFAULT
+		   BLACKF AQUA BOLD " number\n" DEFAULT, player1, player2);
+	printf(BLACKF BROWN BOLD "LAST CHANCE FOR" DEFAULT
+		   BLACKF GRAY BOLD " %s\n\n" DEFAULT, player2);
 }
