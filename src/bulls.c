@@ -17,10 +17,9 @@ char *enter_number(char *player) {
 	}
 	int read = 0;
 
-	printf(BLACKF GRAY BOLD "%s" DEFAULT
-		   BLACKF AQUA BOLD" enter number: " DEFAULT, player);
-	printf(GRAY BLACKF BOLD);
+	print_ask_number(player);
 
+	printf(GRAY BLACKF BOLD);
 	do {
 		ch = (char) getchar ();
 
@@ -28,7 +27,6 @@ char *enter_number(char *player) {
 
 		read++;
 	} while (read != 5 &&  ch != '\n');
-
 	printf(DEFAULT);
 
 	return number;
@@ -74,7 +72,7 @@ int first_player() {
 char *create_player_num(char *player) {
 	char *input = NULL;
 
-	print_creating();
+	print_creating_message();
 
 	while (1) {
 		input = enter_number(player);
@@ -105,7 +103,7 @@ void turns_loop(char *player1, char *player2, char *p1_number, char *p2_number) 
 		if (turn == 1) {
 			print_priority(player1);
 		} else if ((turn - 1) % 4 == 0) {
-			print_blank();
+			print_line();
 			print_priority(player1);
 		}
 
@@ -115,10 +113,10 @@ void turns_loop(char *player1, char *player2, char *p1_number, char *p2_number) 
 
 			if (make_turn(player2, p1_number)) {
 				system("clear");
-				print_draw(player2, player1, p2_number, p1_number);
+				print_draw_message(player2, player1, p2_number, p1_number);
 			} else {
 				system("clear");
-				print_win(player1, player2, p1_number, p2_number);
+				print_win_message(player1, player2, p1_number, p2_number);
 			}
 
 			return;
@@ -128,7 +126,7 @@ void turns_loop(char *player1, char *player2, char *p1_number, char *p2_number) 
 			print_turn(turn);
 			if (make_turn(player2, p1_number)) {
 				system("clear");
-				print_win(player2, player1, p2_number, p1_number);
+				print_win_message(player2, player1, p2_number, p1_number);
 				return;
 			} else {
 				turn++;
@@ -226,7 +224,7 @@ void print_bulls_cows(int bullcow) {
 	printf(BLACKF BOLD BROWN "Cows: " CBLACKF BOLD PURPLE "%d\n\n" DEFAULT, cows);
 }
 
-void print_draw(char *saved, char *second, char *sav_num, char *sec_num) {
+void print_draw_message(char *saved, char *second, char *sav_num, char *sec_num) {
 	printf(BLACKF BROWN BOLD "DRAW" DEFAULT
 		   BLACKF GRAY BOLD " (%s guessed %s number on" DEFAULT
 		   BLACKF BROWN BOLD " LAST CHANCE" DEFAULT
@@ -236,7 +234,7 @@ void print_draw(char *saved, char *second, char *sav_num, char *sec_num) {
 	print_player_and_num(second, sec_num);
 }
 
-void print_win(char *winner, char *loser, char *win_num, char *l_num) {
+void print_win_message(char *winner, char *loser, char *win_num, char *l_num) {
 	printf(BLACKF GRAY BOLD "%s" DEFAULT
 		   BLACKF GREEN BOLD " WIN (GJ)\n\n" DEFAULT, winner);
 	print_player_and_num(winner, win_num);
@@ -247,6 +245,32 @@ void print_player_and_num(char *player, char *number) {
 	printf(BLACKF GRAY BOLD "%s" DEFAULT
 		   BLACKF AQUA BOLD " number was ->" DEFAULT
 		   BLACKF GRAY BOLD " %s\n" DEFAULT, player, number);
+}
+
+void print_creating_message() {
+	printf(BLACKF AQUA BOLD "CREATING PLAYER SECRET NUMBER FOR GAME\n\n" DEFAULT);
+}
+
+void print_line() {
+	printf(BLACKF BROWN BOLD);
+	for (int i = 0; i < 80; i++) {
+		printf("-");
+	}
+	printf("\n" DEFAULT);
+}
+
+void print_last_chance(char *player1, char *player2) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD " guessed" DEFAULT
+		   BLACKF GRAY BOLD " %s" DEFAULT
+		   BLACKF AQUA BOLD " number\n" DEFAULT, player1, player2);
+	printf(BLACKF BROWN BOLD "LAST CHANCE FOR" DEFAULT
+		   BLACKF GRAY BOLD " %s\n\n" DEFAULT, player2);
+}
+
+void print_ask_number(char *player) {
+	printf(BLACKF GRAY BOLD "%s" DEFAULT
+		   BLACKF AQUA BOLD" enter number: " DEFAULT, player);
 }
 
 
@@ -288,25 +312,4 @@ int check_number(char *number) {
 	}
 
 	return 0;
-}
-
-void print_creating() {
-	printf(BLACKF AQUA BOLD "CREATING PLAYER SECRET NUMBER FOR GAME\n\n" DEFAULT);
-}
-
-void print_blank() {
-	printf(BLACKF BROWN BOLD);
-	for (int i = 0; i < 80; i++) {
-		printf("-");
-	}
-	printf("\n" DEFAULT);
-}
-
-void print_last_chance(char *player1, char *player2) {
-	printf(BLACKF GRAY BOLD "%s" DEFAULT
-		   BLACKF AQUA BOLD " guessed" DEFAULT
-		   BLACKF GRAY BOLD " %s" DEFAULT
-		   BLACKF AQUA BOLD " number\n" DEFAULT, player1, player2);
-	printf(BLACKF BROWN BOLD "LAST CHANCE FOR" DEFAULT
-		   BLACKF GRAY BOLD " %s\n\n" DEFAULT, player2);
 }

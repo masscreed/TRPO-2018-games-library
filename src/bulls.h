@@ -26,12 +26,13 @@ void print_error(int error);
 void print_priority(char *player);
 void print_turn(int turn);
 void print_bulls_cows(int bullcow);
-void print_draw(char *saved, char *second, char *sav_num, char *sec_num);
-void print_win(char *winner, char *loser, char *win_num, char *l_num);
+void print_draw_message(char *saved, char *second, char *sav_num, char *sec_num);
+void print_win_message(char *winner, char *loser, char *win_num, char *l_num);
 void print_player_and_num(char *player, char *number);
-void print_creating();
-void print_blank();
+void print_creating_message();
+void print_line();
 void print_last_chance(char *player1, char *player2);
+void print_ask_number(char *player);
 
 //Additional functions
 void flush_input();
