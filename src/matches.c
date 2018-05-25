@@ -5,6 +5,12 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#define MATCHES_LEFT (3)
+#define TAKE_MATCH (2)
+#define YOUR_TURN (1)
+#define TOO_LARGE_HEAP (-1)
+#define MANY_LETTERS (-2)
+
 int check_match(char *value)
 {
 
@@ -91,28 +97,28 @@ void print_winnner(int win, char *player)
 
 void print_over(int i)
 {
-	if(i == -1){
+	if(i == TOO_LARGE_HEAP){
 		printf(BLACKF RED BOLD "Value is too large for heap!\n" DEFAULT);
 	}
 	
-	if(i == -2){
+	if(i == MANY_LETTERS){
 		printf(BLACKF RED BOLD "Too much letters in a string\n" DEFAULT);
 	}
 }
 
 void print_matches_turn(char *player, int i, int *matches)
 {
-	if(i == 1){
+	if(i == YOUR_TURN){
 		printf(BLACKF GRAY BOLD "%s," DEFAULT
 			BLACKF AQUA BOLD " your turn\n" DEFAULT, player);
 	}
 
-	if(i == 2){
+	if(i == TAKE_MATCH){
 		printf(BLACKF AQUA BOLD "Enter how much matches you want to take -> "
 			DEFAULT);
 	}
 
-	if(i == 3){
+	if(i == MATCHES_LEFT){
 		system ("clear");
 		printf(BLACKF BROWN BOLD "Matches left %d\n\n" DEFAULT, *matches);
 	}
@@ -175,7 +181,7 @@ int ask_nickname(char *player, int index)
 		if (flag == -2){
 			flush_input_for_match();
 			system ("clear");
-			print_over(flag);
+			print_over(MANY_LETTERS);
 			continue;
 		} else {
 			break;
@@ -196,10 +202,10 @@ int matches_turn(char *player, int *matches)
 	value = calloc(sizeof(char), 3);
 	int num, flag, check;
 
-	print_matches_turn(player, 1, matches);
+	print_matches_turn(player, YOUR_TURN, matches);
 
 	while (1) {
-		print_matches_turn(player, 2, matches);
+		print_matches_turn(player, TAKE_MATCH, matches);
 		value = enter_matches();
 		flag = check_match(value);
 
@@ -212,7 +218,7 @@ int matches_turn(char *player, int *matches)
 
 		check = check_heap(matches, num);
 		if (check == -1){
-			print_over(check);
+			print_over(TOO_LARGE_HEAP);
 			continue;
 		}
 
@@ -223,7 +229,7 @@ int matches_turn(char *player, int *matches)
 				return 1;
 
 			} else {
-				print_matches_turn(player, 3, matches);
+				print_matches_turn(player, MATCHES_LEFT, matches);
 				return 0;
 			}
 		}
