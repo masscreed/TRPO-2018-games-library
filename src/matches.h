@@ -1,6 +1,12 @@
 #ifndef MATCHES_H
 #define MATCHES_H
 
+#define MATCHES_LEFT (3)
+#define TAKE_MATCH (2)
+#define YOUR_TURN (1)
+#define TOO_LARGE_HEAP (-1)
+#define MANY_LETTERS (-2)
+
 int ask_nickname(char *player, int index);
 char *enter_nickname(char *player);
 int check_nickname(char *player);

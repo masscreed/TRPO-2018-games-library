@@ -5,11 +5,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#define MATCHES_LEFT (3)
-#define TAKE_MATCH (2)
-#define YOUR_TURN (1)
-#define TOO_LARGE_HEAP (-1)
-#define MANY_LETTERS (-2)
 
 int check_match(char *value)
 {
@@ -86,13 +81,9 @@ void print_ask_name(char *player, int index)
 
 void print_winnner(int win, char *player)
 {
-	if (win == 1){
-		system("clear");
-		printf(BLACKF GREEN BOLD "You won," DEFAULT
+	printf(BLACKF GREEN BOLD "You won," DEFAULT
 		BLACKF GRAY BOLD " %s.\n\n" DEFAULT
 		BLACKF GREEN BOLD "Eazy win - Eazy life!\n" DEFAULT, player);
-		exit(0);
-	}
 }
 
 void print_over(int i)
@@ -254,13 +245,24 @@ void matches_game()
 		if (player == 1){
 
 			win = matches_turn(player1, &matches);
-			print_winnner(win, player1);
+			if(win == 1){
+				system("clear");
+				print_winnner(win, player1);
+				exit(0);
+			}
+			
+			
 		}
 	
 		if (player == 2){
 
 			win = matches_turn(player2, &matches);
-			print_winnner(win, player2);
+			if(win == 1){
+				system("clear");
+				print_winnner(win, player2);
+				exit(0);
+			}
+			
 		}
 
 		if (player == 1){
